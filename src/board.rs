@@ -2,6 +2,8 @@ use pos::*;
 use std::collections::HashSet;
 use std::option::Option;
 
+use rand::random;
+
 #[derive(Clone)]
 pub struct Board {
     queens: HashSet<Pos>,
@@ -34,8 +36,16 @@ impl Board {
         }).collect()
     }
 
-    //pub fn populate(&self) -> Vec<&pos> {
-    //}
+    pub fn populate_random(&mut self) {
+        for y in 1..(self.dims.y + 1) {
+            let x = random::<i32>() % self.dims.x + 1;
+            self.add_queen(y, x);
+        }
+    }
+
+    pub fn solved(&self) -> bool {
+        self.jeporadized_pieces().len() == 0
+    }
 }
 
 #[test]
@@ -53,8 +63,24 @@ fn test_jeporadized_pieces() {
     assert!(board.jeporadized_pieces().len() == 2);
 }
 
+#[test]
 fn test_default_size() {
     let board = Board::new(None);
     assert!(board.dims.x == 10);
     assert!(board.dims.y == 10);
+}
+
+#[test]
+fn test_populate_random() {
+    let mut board = Board::new(None);
+    board.populate_random();
+    assert!(board.queens.len() == 10);
+}
+
+#[test]
+fn test_solved() {
+    let mut board = Board::new(Some(Dims{x: 5, y: 5}));
+    board.add_queen(1,1);
+    board.add_queen(3,4);
+    assert!(board.solved());
 }

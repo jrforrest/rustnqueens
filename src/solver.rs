@@ -5,7 +5,7 @@ pub struct Solver {
 }
 
 impl Solver {
-    fn new() -> Solver {
+    pub fn new() -> Solver {
         Solver{board: Board::new(None)}
     }
 }
