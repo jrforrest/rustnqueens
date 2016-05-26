@@ -9,20 +9,59 @@
 /// any one node has identified a satisfactory solution.
 
 use board::Board;
+use pos::Pos;
+use rand::{thread_rng, Rng};
 
 pub struct Solver {
     board: Board,
+    temp: u32,
 }
-
 
 impl Solver {
     pub fn new() -> Solver {
-        Solver{board: Board::new(None)}
+        let mut board = Board::new(None);
+        board.populate_random();
+        Solver{board: board, temp: 10000}
     }
+
+    pub fn solve(&mut self) {
+        loop {
+            if self.board.solved() || self.temp == 0 {
+                break;
+            }
+
+            self.step();
+       }
+    }
+
+    /// Steps the simulation one step
+    fn step(&mut self) {
+        let jep_piece = self.random_jeporadized_piece();
+        self.board.move_to_random_col(&jep_piece);
+        self.temp -= 1;
+    }
+
+
+   /// Selects a random piece that is in jeporady
+   fn random_jeporadized_piece(&self) -> Pos {
+       let jep: Vec<Pos> = self.board.jeporadized_pieces();
+       let chosen = thread_rng().choose(jep.as_slice());
+
+       match chosen {
+           Some(piece) => {
+            let new_piece: Pos = piece.clone();
+            new_piece
+           },
+           None => panic!("Could not find jeporadized piece!")
+       }
+   }
 }
 
 #[test]
-fn test_new() {
-    let solver = Solver::new();
-    assert!(true);
+fn test_solve() {
+    let mut solver = Solver::new();
+    solver.solve();
+    println!("{}", solver.board);
+    assert!(solver.board.solved());
+
 }
