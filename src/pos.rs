@@ -1,4 +1,5 @@
-#[derive(Hash, Eq, PartialEq, Clone)]
+#[derive(Eq, PartialEq, Clone)]
+
 pub struct Pos {
     pub x: i32,
     pub y: i32

@@ -1,13 +1,15 @@
-use pos::*;
-use std::collections::HashSet;
+use pos::Pos;
 use std::option::Option;
 use std::fmt;
+use std::vec::Vec;
 
 use rand::random;
 
+pub type Queen = Pos;
+
 #[derive(Clone)]
 pub struct Board {
-    queens: HashSet<Pos>,
+    queens: Vec<Queen>,
     dims: Dims,
 }
 
@@ -24,14 +26,14 @@ impl Board {
             Some(d) => d
         };
 
-        Board { queens: HashSet::new(), dims: dims }
+        Board { queens: Vec::new(), dims: dims }
     }
 
     pub fn add_queen (&mut self, x: i32, y: i32) {
-        self.queens.insert(Pos::new(x, y));
+        self.queens.push(Queen::new(x, y));
     }
 
-    pub fn jeporadized_pieces(&self) -> Vec<Pos> {
+    pub fn jeporadized_pieces(&self) -> Vec<Queen> {
         self.queens.iter().
             filter(|q| { self.queens.iter().any(|oq| q.can_attack(oq))}).
             map(|q| { q.clone() } ).
@@ -49,8 +51,8 @@ impl Board {
         self.jeporadized_pieces().len() == 0
     }
 
-    pub fn move_to_random_col(&mut self, queen: &Pos) {
-        self.queens.remove(&queen);
+    pub fn move_to_random_col(&mut self, queen: &Queen) {
+        self.remove_queen(&queen);
 
         // Shift the column by one if we collided with the column
         // of the given queen
@@ -60,6 +62,11 @@ impl Board {
         }
 
         self.add_queen(queen.x, y);
+    }
+
+    fn remove_queen(&mut self, queen: &Queen) {
+        let pos = self.queens.iter().position(|q| q == queen).unwrap();
+        self.queens.remove(pos);
     }
 
     /// Returns a random column on the board

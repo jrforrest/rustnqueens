@@ -34,8 +34,12 @@ impl Solver {
        }
     }
 
+    pub fn get_board(&self) -> &Board {
+        &self.board
+    }
+
     /// Steps the simulation one step
-    fn step(&mut self) {
+    pub fn step(&mut self) {
         let jep_piece = self.random_jeporadized_piece();
         self.board.move_to_random_col(&jep_piece);
         self.temp -= 1;
