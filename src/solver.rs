@@ -10,7 +10,6 @@
 
 use board::Board;
 use pos::Pos;
-use rand::{thread_rng, Rng};
 
 pub struct Solver {
     board: Board,
@@ -40,25 +39,18 @@ impl Solver {
 
     /// Steps the simulation one step
     pub fn step(&mut self) {
-        let jep_piece = self.random_jeporadized_piece();
-        self.board.move_to_random_col(&jep_piece);
+        let queen = self.random_queen();
+
+        self.board.move_to_random_col(&queen);
         self.temp -= 1;
     }
 
-
-   /// Selects a random piece that is in jeporady
-   fn random_jeporadized_piece(&self) -> Pos {
-       let jep: Vec<Pos> = self.board.jeporadized_pieces();
-       let chosen = thread_rng().choose(jep.as_slice());
-
-       match chosen {
-           Some(piece) => {
-            let new_piece: Pos = piece.clone();
-            new_piece
-           },
-           None => panic!("Could not find jeporadized piece!")
-       }
-   }
+    fn random_queen(&self) -> Pos {
+        match self.board.random_piece() {
+            Some(queen) => queen.clone(),
+            None => panic!("Cannot step empty board!")
+        }
+    }
 }
 
 #[test]

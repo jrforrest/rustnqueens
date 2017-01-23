@@ -2,6 +2,7 @@ use pos::Pos;
 use std::option::Option;
 use std::fmt;
 use std::vec::Vec;
+use rand::{thread_rng, Rng};
 
 use rand::random;
 
@@ -62,6 +63,10 @@ impl Board {
         }
 
         self.add_queen(queen.x, y);
+    }
+
+    pub fn random_piece(&self) -> Option<&Queen> {
+        thread_rng().choose(&self.queens)
     }
 
     fn remove_queen(&mut self, queen: &Queen) {
@@ -145,4 +150,18 @@ fn test_solved() {
     board.add_queen(1,1);
     board.add_queen(3,4);
     assert!(board.solved());
+}
+
+#[test]
+fn test_random_piece() {
+    let mut board = Board::new(None);
+
+    board.add_queen(1,1);
+
+    let res = match board.random_piece() {
+        Some(_) => true,
+        None => false
+    };
+
+    assert!(res);
 }

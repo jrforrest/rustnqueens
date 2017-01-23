@@ -9,7 +9,7 @@ use solver::Solver;
 fn main() {
     let mut solver = Solver::new();
 
-    for i in 0..10 {
+    for _ in 0..10 {
         println!("{}", solver.get_board());
         solver.step();
     }
