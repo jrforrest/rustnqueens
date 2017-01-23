@@ -18,7 +18,7 @@ pub struct Solver {
 
 impl Solver {
     pub fn new() -> Solver {
-        let mut solution = Solution::new();
+        let solution = Solution::new();
         Solver{solution: solution, temp: 10000}
     }
 
@@ -38,7 +38,7 @@ impl Solver {
 
     /// Steps the simulation one step
     pub fn step(&mut self) {
-        self.solution.make_random_move();
+        self.solution = self.solution.get_neighbor_solution();
         self.temp -= 1;
     }
 }

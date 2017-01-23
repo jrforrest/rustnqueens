@@ -32,6 +32,12 @@ impl Solution {
         &self.board
     }
 
+    pub fn get_neighbor_solution(&self) -> Solution {
+        let mut new = self.clone();
+        new.make_random_move();
+        new
+    }
+
     fn random_queen(&self) -> Pos {
         match self.board.random_piece() {
             Some(queen) => queen.clone(),
@@ -42,8 +48,16 @@ impl Solution {
 
 #[test]
 fn test_from_board() {
-    let board = Board::new(Some(Dims{x: 5, y: 5}));
-    let solution = Solution.from_board(board);
+    let board = Board::new(None);
+    let solution = Solution::from_board(&board);
 
-    assert!(solution);
+    assert!(true);
+}
+
+#[test]
+fn test_get_neighbor_solution() {
+    let solution = Solution::new();
+    let new = solution.get_neighbor_solution();
+
+    assert!(true);
 }
