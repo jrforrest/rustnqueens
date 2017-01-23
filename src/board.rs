@@ -81,7 +81,7 @@ impl Board {
 
     /// Shifts the given col number by one wrapping if necessary
     fn shift_col(&self, col: i32) -> i32 {
-        (col + 1) % self.dims.y + 1
+        (col + 1) % self.dims.y
     }
 
     pub fn queen_at(&self, pos: Pos) -> bool {

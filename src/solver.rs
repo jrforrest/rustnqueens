@@ -3,29 +3,28 @@
 ///
 /// Basically, each cluster starts with a random solution, and the nodes
 /// re-converge each N iterations with the best current solution.
-/// 
+///
 /// Since we have an acceptance measure here (that being a board which is
 /// solved) we can re-converge to perpetuity, yielding a perfect solution when
 /// any one node has identified a satisfactory solution.
 
+use solution::Solution;
 use board::Board;
-use pos::Pos;
 
 pub struct Solver {
-    board: Board,
+    solution: Solution,
     temp: u32,
 }
 
 impl Solver {
     pub fn new() -> Solver {
-        let mut board = Board::new(None);
-        board.populate_random();
-        Solver{board: board, temp: 10000}
+        let mut solution = Solution::new();
+        Solver{solution: solution, temp: 10000}
     }
 
     pub fn solve(&mut self) {
         loop {
-            if self.board.solved() || self.temp == 0 {
+            if self.solution.solved() || self.temp == 0 {
                 break;
             }
 
@@ -34,30 +33,12 @@ impl Solver {
     }
 
     pub fn get_board(&self) -> &Board {
-        &self.board
+        &self.solution.get_board()
     }
 
     /// Steps the simulation one step
     pub fn step(&mut self) {
-        let queen = self.random_queen();
-
-        self.board.move_to_random_col(&queen);
+        self.solution.make_random_move();
         self.temp -= 1;
     }
-
-    fn random_queen(&self) -> Pos {
-        match self.board.random_piece() {
-            Some(queen) => queen.clone(),
-            None => panic!("Cannot step empty board!")
-        }
-    }
-}
-
-#[test]
-fn test_solve() {
-    let mut solver = Solver::new();
-    solver.solve();
-    println!("{}", solver.board);
-    assert!(solver.board.solved());
-
 }

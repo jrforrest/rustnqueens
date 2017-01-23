@@ -2,6 +2,7 @@ extern crate rand;
 
 mod pos;
 mod board;
+mod solution;
 mod solver;
 
 use solver::Solver;
