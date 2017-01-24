@@ -32,6 +32,10 @@ impl Solution {
         &self.board
     }
 
+    pub fn n_jeporadized_queens(&self) -> usize {
+        self.board.jeporadized_pieces().len()
+    }
+
     pub fn get_neighbor_solution(&self) -> Solution {
         let mut new = self.clone();
         new.make_random_move();

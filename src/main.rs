@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 extern crate rand;
 extern crate cursive;
 
@@ -10,8 +12,6 @@ use solver::Solver;
 
 use cursive::Cursive;
 use cursive::views::{TextView, IdView};
-
-use std::fmt;
 
 use std::cell::RefCell;
 
