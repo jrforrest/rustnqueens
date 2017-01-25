@@ -11,13 +11,13 @@ pub type Queen = Pos;
 #[derive(Clone)]
 pub struct Board {
     queens: Vec<Queen>,
-    dims: Dims,
+    pub dims: Dims,
 }
 
 #[derive(Clone, Copy)]
 pub struct Dims {
-    x: i32,
-    y: i32,
+    pub x: usize,
+    pub y: usize,
 }
 
 impl Board {
@@ -30,7 +30,7 @@ impl Board {
         Board { queens: Vec::new(), dims: dims }
     }
 
-    pub fn add_queen (&mut self, x: i32, y: i32) {
+    pub fn add_queen (&mut self, x: usize, y: usize) {
         self.queens.push(Queen::new(x, y));
     }
 
@@ -42,8 +42,8 @@ impl Board {
     }
 
     pub fn populate_random(&mut self) {
-        for x in 1..(self.dims.x + 1) {
-            let y = self.random_col();
+        for y in 0..(self.dims.x - 1) {
+            let x = self.random_col();
             self.add_queen(x, y);
         }
     }
@@ -57,12 +57,12 @@ impl Board {
 
         // Shift the column by one if we collided with the column
         // of the given queen
-        let mut y = self.random_col();
-        if y == queen.y {
-            y = self.shift_col(y);
+        let mut x = self.random_col();
+        if x == queen.x {
+            x = self.shift_col(x);
         }
 
-        self.add_queen(queen.x, y);
+        self.add_queen(x, queen.y);
     }
 
     pub fn random_piece(&self) -> Option<&Queen> {
@@ -79,13 +79,13 @@ impl Board {
     }
 
     /// Returns a random column on the board
-    fn random_col(&self) -> i32 {
-        random::<i32>() % self.dims.y + 1
+    fn random_col(&self) -> usize {
+        random::<usize>() % (self.dims.y - 1)
     }
 
     /// Shifts the given col number by one wrapping if necessary
-    fn shift_col(&self, col: i32) -> i32 {
-        (col + 1) % self.dims.y
+    fn shift_col(&self, col: usize) -> usize {
+        (col + 1) % (self.dims.x - 1)
     }
 
     pub fn queen_at(&self, pos: Pos) -> bool {
@@ -96,26 +96,6 @@ impl Board {
         }
 
         return false;
-    }
-}
-
-impl fmt::Display for Board {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        for x in 0..(self.dims.x) {
-            for y in 0..(self.dims.y) {
-                let ch = if self.queen_at(Pos{x: x, y: y}) {
-                    'x'
-                } else {
-                    '~'
-                };
-
-                try!(write!(f, "{}", ch));
-            }
-
-            try!(write!(f, "\n"));
-        }
-
-        Ok(())
     }
 }
 

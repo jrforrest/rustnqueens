@@ -9,6 +9,10 @@ use std::cell::RefCell;
 use std::rc::Rc;
 
 use solver::Solver;
+use board::Board;
+use pos::Pos;
+
+use std::string::String;
 
 pub struct UI {
     solver: Rc<RefCell<Solver>>,
@@ -77,7 +81,8 @@ impl<'a> UiBinding<'a> {
     pub fn update(&mut self) {
         let board = self.solver.get_board();
 
-        self.set_textview("grid", format!("{}", board));
+
+        self.set_textview("grid", BoardUI(board).grid());
         self.set_textview("label", format!(" {:?}", board.get_queens()));
     }
 
@@ -87,5 +92,27 @@ impl<'a> UiBinding<'a> {
             None => panic!("Could not find UI elem with id: {}", id),
             Some(v) => v.set_content(text),
         };
+    }
+}
+
+struct BoardUI<'a> (&'a Board);
+
+impl<'a> BoardUI<'a> {
+    pub fn grid(&self) -> String {
+        let mut out = String::new();
+
+        for y in 0..(self.0.dims.y - 1) {
+            for x in 0..(self.0.dims.x - 1) {
+                let ch = if self.0.queen_at(Pos{x: x, y: y}) {
+                    'x'
+                } else {
+                    '~'
+                };
+                out.push(ch)
+            }
+            out.push('\n');
+        }
+
+        out
     }
 }

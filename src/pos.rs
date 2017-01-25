@@ -1,12 +1,12 @@
 #[derive(Eq, PartialEq, Clone, Debug)]
 
 pub struct Pos {
-    pub x: i32,
-    pub y: i32
+    pub x: usize,
+    pub y: usize
 }
 
 impl Pos {
-    pub fn new(x: i32, y: i32) -> Pos {
+    pub fn new(x: usize, y: usize) -> Pos {
         Pos {x: x, y: y}
     }
 
@@ -21,7 +21,8 @@ impl Pos {
     }
 
     fn diagonal_to(&self, other: &Pos) -> bool {
-        (other.x - self.x).abs() == (other.y - self.y).abs()
+        (other.x as i32 - self.x as i32).abs() ==
+            (other.y as i32 - self.y as i32).abs()
     }
 
     fn on_row_with(&self, other: &Pos) -> bool {
