@@ -69,6 +69,10 @@ impl Board {
         thread_rng().choose(&self.queens)
     }
 
+    pub fn get_queens(&self) -> &Vec<Queen> {
+        &self.queens
+    }
+
     fn remove_queen(&mut self, queen: &Queen) {
         let pos = self.queens.iter().position(|q| q == queen).unwrap();
         self.queens.remove(pos);

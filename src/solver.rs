@@ -56,7 +56,7 @@ impl Solver {
     }
 
     fn cool(&mut self) {
-        self.temp *= 0.1 - self.cooling_rate;
+        self.temp *= 1.0 - self.cooling_rate;
     }
 
     fn should_accept(&self, new_energy: f32) -> bool {
