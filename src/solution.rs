@@ -14,14 +14,6 @@ impl Solution {
         Solution{board: board}
     }
 
-    pub fn from_board(board: &Board) -> Solution {
-        Solution{board: board.clone()}
-    }
-
-    pub fn solved(&self) -> bool {
-        self.board.solved()
-    }
-
     pub fn make_random_move(&mut self) {
         let queen = self.random_queen();
 

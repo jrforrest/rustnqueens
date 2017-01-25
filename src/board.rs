@@ -1,6 +1,5 @@
 use pos::Pos;
 use std::option::Option;
-use std::fmt;
 use std::vec::Vec;
 use rand::{thread_rng, Rng};
 
@@ -23,7 +22,7 @@ pub struct Dims {
 impl Board {
     pub fn new(given_dims: Option<Dims>) -> Board {
         let dims = match given_dims {
-            None => Dims{x: 10, y: 10},
+            None => Dims{x: 15, y: 15},
             Some(d) => d
         };
 
@@ -48,6 +47,7 @@ impl Board {
         }
     }
 
+    #[allow(dead_code)]
     pub fn solved(&self) -> bool {
         self.jeporadized_pieces().len() == 0
     }
@@ -67,10 +67,6 @@ impl Board {
 
     pub fn random_piece(&self) -> Option<&Queen> {
         thread_rng().choose(&self.queens)
-    }
-
-    pub fn get_queens(&self) -> &Vec<Queen> {
-        &self.queens
     }
 
     fn remove_queen(&mut self, queen: &Queen) {

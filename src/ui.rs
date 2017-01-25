@@ -19,6 +19,9 @@ pub struct UI {
     curs: Cursive,
 }
 
+const GRID_MSG: &'static str = "I got N problems and Queens are all of em'";
+const STATUS_MSG: &'static str = "s: iterate\tq: quit";
+
 impl UI {
     pub fn new() -> UI {
         let curs = Cursive::new();
@@ -35,7 +38,7 @@ impl UI {
     }
 
     fn init_views(&mut self) {
-        let tv = TextView::new("grid").v_align(VAlign::Top);
+        let tv = TextView::new(GRID_MSG).v_align(VAlign::Top);
         let trv = IdView::new("grid", tv);
 
         let mut lv = LinearLayout::new(Orientation::Vertical);
@@ -47,7 +50,7 @@ impl UI {
     }
 
     fn make_lower_box() -> BoxView<Panel<IdView<TextView>>> {
-        let tv = TextView::new("label").v_align(VAlign::Bottom);
+        let tv = TextView::new(STATUS_MSG).v_align(VAlign::Bottom);
         let trv = IdView::new("label", tv);
         let panel = Panel::new(trv);
         let bv = BoxView::new(SizeConstraint::Full, SizeConstraint::Fixed(4), panel);
@@ -81,9 +84,16 @@ impl<'a> UiBinding<'a> {
     pub fn update(&mut self) {
         let board = self.solver.get_board();
 
-
         self.set_textview("grid", BoardUI(board).grid());
-        self.set_textview("label", format!(" {:?}", board.get_queens()));
+        self.set_textview("label", UiBinding::status_line(self.solver));
+    }
+
+    fn status_line(solver: &Solver) -> String {
+        format!("Iteration: {}\tJep Queens: {}\tTemp: {}\nBest Jep Queens: {}",
+            solver.iteration,
+            solver.n_jeporadized_queens(),
+            solver.temp,
+            solver.best_n_jeporadized_queens())
     }
 
     fn set_textview(&mut self, id: &str, text: String) {

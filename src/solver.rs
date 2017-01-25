@@ -1,13 +1,3 @@
-/// This solver will be using a simulated annealing, run in a parallel cluster
-/// configuration (see: http://dos.iitm.ac.in/LabPapers/parallelSAJPDC.pdf).
-///
-/// Basically, each cluster starts with a random solution, and the nodes
-/// re-converge each N iterations with the best current solution.
-///
-/// Since we have an acceptance measure here (that being a board which is
-/// solved) we can re-converge to perpetuity, yielding a perfect solution when
-/// any one node has identified a satisfactory solution.
-
 extern crate rand;
 
 use solution::Solution;
@@ -17,8 +7,9 @@ use std::rc::Rc;
 pub struct Solver {
     solution: Rc<Solution>,
     best_solution: Rc<Solution>,
-    temp: f32,
-    cooling_rate: f32,
+    pub temp: f32,
+    pub iteration: u32,
+    cooling_factor: f32,
 }
 
 impl Solver {
@@ -28,8 +19,9 @@ impl Solver {
         Solver{
             solution: solution.clone(),
             best_solution: solution.clone(),
-            temp: 1000f32,
-            cooling_rate: 0.03,
+            temp: 10000f32,
+            iteration: 0,
+            cooling_factor: 0.97f32,
         }
     }
 
@@ -53,10 +45,19 @@ impl Solver {
         }
 
         self.cool();
+        self.iteration += 1;
+    }
+
+    pub fn n_jeporadized_queens(&self) -> usize {
+        self.solution.n_jeporadized_queens()
+    }
+
+    pub fn best_n_jeporadized_queens(&self) -> usize {
+        self.best_solution.n_jeporadized_queens()
     }
 
     fn cool(&mut self) {
-        self.temp *= 1.0 - self.cooling_rate;
+        self.temp *= self.cooling_factor;
     }
 
     fn should_accept(&self, new_energy: f32) -> bool {
